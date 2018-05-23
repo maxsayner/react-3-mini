@@ -6,6 +6,9 @@ import './App.css';
 // Toast notification dependencies
 import { ToastContainer, toast } from 'react-toastify';
 
+const BASE_URL = 'https://joes-autos.herokuapp.com/api'
+
+
 class App extends Component {
   constructor( props ) {
     super( props );
@@ -29,16 +32,37 @@ class App extends Component {
   }
 
   getVehicles() {
+    console.log('running')
+    axios({
+      method: 'GET',
+      url: BASE_URL + '/vehicles'
+    }).then(response => {
+      console.log('response', response)
+      this.setState({ vehiclesToDisplay: response.data })
+    }).catch(error => console.log('errpr', error))
+
     // axios (GET)
     // setState with response -> vehiclesToDisplay
   }
 
   getPotentialBuyers() {
+    axios({
+      method: 'GET',
+      url: BASE_URL + '/buyers'
+    }).then(response => {
+      this.setState({ buyersToDisplay: response.data})
+    })
     // axios (GET)
     // setState with response -> buyersToDisplay
   }
 
   sellCar( id ) {
+    axios({
+      method: "DELETE",
+      url: BASE_URL + '/vehiclesToDisplay/{2}'
+    }).then(response => {
+      this.setState({ vehiclesToDisplay: response.data.delete})
+    })
     // axios (DELETE)
     // setState with response -> vehiclesToDisplay
   }
@@ -46,6 +70,12 @@ class App extends Component {
   filterByMake() {
     let make = this.refs.selectedMake.value;
 
+    axios({
+      method: 'GET',
+      url: BASE_URL + '/vehicles?make=' + make
+    }).then(response => {
+      this.setState({vehiclesToDisplay: response.data})
+    })
     // axios (GET)
     // setState with response -> vehiclesToDisplay
   }
@@ -53,11 +83,28 @@ class App extends Component {
   filterByColor() {
     let color = this.refs.selectedColor.value;
 
+    axios({
+      method: 'GET',
+      url: BASE_URL + '/vehicles?color=' + color
+    }).then(response => {
+      this.setState({vehiclesToDisplay: response.data})
+    })
+    }
+     
+    
+
     // axios (GET)
     // setState with response -> vehiclesToDisplay
-  }
+ 
 
   updatePrice( priceChange, id ) {
+
+    axios({
+      method: 'PUT',
+      url: BASE_URL + '/vehiclesToDisplay/{1}/1000'
+    }).then(response => {
+      this.setState({ vehiclesToDisplay: response.delete})
+    })
     // axios (PUT)
     // setState with response -> vehiclesToDisplay
   }
@@ -70,6 +117,11 @@ class App extends Component {
       year: this.refs.year.value,
       price: this.refs.price.value
     };
+    axios({
+      method: 'POST',
+      url: BASE_URL + '/vehicles',
+      data: newCar
+    })
 
     // axios (POST)
     // setState with response -> vehiclesToDisplay
@@ -82,11 +134,26 @@ class App extends Component {
       address: this.refs.address.value
     };
 
+    axios({
+      method: 'POST',
+      url: BASE_URL + '/buyers',
+      data: newBuyer
+    }).then(response => {
+      this.setState({ buyersToDisplay: response.data.buyers
+      })
+    })
     //axios (POST)
     // setState with response -> buyersToDisplay
   }
 
   deleteBuyer( id ) {
+
+    axios({
+      method: 'DELETE',
+      url: BASE_URL + '/buyers/{1}',
+      }).then(response => {
+        this.setState({ buyersToDisplay: response.delete})
+      })
     // axios (DELETE)
     //setState with response -> buyersToDisplay
   }
@@ -94,12 +161,26 @@ class App extends Component {
   nameSearch() {
     let searchLetters = this.refs.searchLetters.value;
 
+    axios({
+      method: 'GET',
+      url: BASE_URL + '/buyersToDisplay'
+    }).then(response => {
+      this.setState({ buyersToDisplay: response.data})
+    })
+
     // axios (GET)
     // setState with response -> buyersToDisplay
   }
 
   byYear() {
     let year = this.refs.searchYear.value;
+
+    axios({
+      method: 'GET',
+      url: BASE_URL + '/vehicles?year' + year
+    }).then(response => {
+      this.setState({vehiclesToDisplay: response.data})
+    })
 
     // axios (GET)
     // setState with response -> vehiclesToDisplay
